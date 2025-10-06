@@ -1,0 +1,32 @@
+.about {
+  padding: 2rem;
+  text-align: center;
+  background-color: white;
+  min-height: 100vh;
+}
+
+.about-container {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.about-image {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.about-name {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 1.2rem;
+}
+
+.about-paragraph {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}

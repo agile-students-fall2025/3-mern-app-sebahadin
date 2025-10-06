@@ -3,6 +3,7 @@ const express = require('express') // CommonJS import style!
 const morgan = require('morgan') // middleware for nice logging of incoming HTTP requests
 const cors = require('cors') // middleware for enabling CORS (Cross-Origin Resource Sharing) requests.
 const mongoose = require('mongoose')
+const path = require('path')
 
 const app = express() // instantiate an Express object
 app.use(morgan('dev', { skip: (req, res) => process.env.NODE_ENV === 'test' })) // log all incoming requests, except when in unit test mode.  morgan has a few logging default styles - dev is a nice concise color-coded style
@@ -11,6 +12,8 @@ app.use(cors()) // allow cross-origin resource sharing
 // use express's builtin body-parser middleware to parse any data included in a request
 app.use(express.json()) // decode JSON-formatted incoming POST data
 app.use(express.urlencoded({ extended: true })) // decode url-encoded incoming POST data
+
+app.use('/static', express.static(path.join(__dirname, 'public')));
 
 // connect to database
 mongoose
@@ -77,6 +80,25 @@ app.post('/messages/save', async (req, res) => {
     })
   }
 })
+
+// a route to handle fetching "About Us" info
+app.get('/about', (req, res) => {
+  const protocol = req.protocol          // http or https
+  const host = req.get('host')           // localhost:5000, domain.com, etc.
+  const imageUrl = `${protocol}://${host}/static/sebahadin.jpg`;// or change path if needed
+
+  res.json({
+    name: 'Sebahadin Denur',
+    title: 'Computer Science and Economics Student at NYU Abu Dhabi',
+    paragraphs: [
+      'Hello! My name is Sebahadin Denur.',
+      'I am a Computer Science and Economics student at NYU Abu Dhabi. I enjoy working on projects that combine data and technology to solve real-world problems.',
+      'I am interested in data science, full-stack web development, and AI research. In my free time, I enjoy learning new tools and collaborating on creative tech projects.'
+    ],
+    image: imageUrl
+  })
+})
+
 
 // export the express app we created to make it available to other modules
 module.exports = app // CommonJS export style!

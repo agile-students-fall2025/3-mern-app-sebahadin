@@ -1,39 +1,34 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
+import "./About.css";
 
-/**
- * A React component that represents the About Us page of the app.
- * Fetches personal info from the backend and displays it.
- */
-const About = props => {
-  const [data, setData] = useState(null)
+export default function About() {
+  const [data, setData] = useState(null);
+  const [err, setErr] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:3000/about')
-      .then(res => res.json())
-      .then(info => setData(info))
-      .catch(err => console.error('Error fetching about info:', err))
-  }, [])
+    const API = process.env.REACT_APP_API_URL || "http://localhost:5002";
+    fetch(`${API}/about`)
+      .then(r => (r.ok ? r.json() : Promise.reject(r.statusText)))
+      .then(setData)
+      .catch(setErr);
+  }, []);
 
-  if (!data) {
-    return <p>Loading...</p>
-  }
+  if (err) return <main className="about">Failed to load About.</main>;
+  if (!data) return <main className="about">Loading…</main>;
 
   return (
-    <>
-      <h1>About Us</h1>
-      <img
-        src={data.image}
-        alt="Profile"
-        style={{ width: '200px', borderRadius: '50%', marginBottom: '1rem' }}
-      />
-      <h2>{data.name}</h2>
-      <h4>{data.title}</h4>
-      {data.paragraphs.map((para, index) => (
-        <p key={index}>{para}</p>
-      ))}
-    </>
-  )
+    <main className="about">
+      <div className="about-container">
+        <img
+          src={data.image}
+          alt={data.name}
+          className="about-image"
+        />
+        <h2 className="about-name">{data.name}</h2>
+        {data.paragraphs.map((p, i) => (
+          <p key={i} className="about-paragraph">{p}</p>
+        ))}
+      </div>
+    </main>
+  );
 }
-
-// make this component available to be imported into any other file
-export default About
